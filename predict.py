@@ -1,56 +1,63 @@
 import sys
 import json
 
-def hello_from_docker(event, context) -> json:
+def run(event, context) -> json:
+    '''
+    Receive a person input and return a prediction.
+    
+    Parameters:
+
+        - event: dict, required
+        The event object that contains the input to the Lambda function. 
+        Expect the input to have a person key:
+            "person" : {
+                        "age": 42,
+                        "job": "entrepreneur",
+                        "marital": "married",
+                        "education": "primary",
+                        "balance": 558,
+                        "housing": "yes",
+                        "duration": 186,
+                        "campaign": 2,
+                    }
+
+        
+        - context: object, required
+        The context object provided by AWS Lambda, containing metadata and runtime information.
+    
+    Returns:
+
+        - json:
+            {   
+                "input": person,
+                "prediction": value_prediction
+            }
+    
+    '''
+
+    if not isinstance(event, dict):
+        raise ValueError("Event must be a dictionary.")
+    
+    body = event.get("body")
+    if not body:
+        return {
+            "Error": "Invalid input: no body found."
+        }
+
+    try:
+        json_body = json.loads(body)
+    except json.JSONDecodeError:
+        return {
+            "Error": "Invalid input: unable to parse JSON body."
+        }
+    person = json_body.get("person")
+    
+    if not isinstance(person, dict):
+        return {
+            "Error": "Invalid input: 'person' must be a string."
+        }
+
     return {
-        "created_by": "leticiacb1",
-        "message": "Hello World!",
-        "version": sys.version
+        "input" : person,
+        "prediciton": "predict_value"
     }
-
-# Schemas Model
-from ..schemas.model.request import Person
-from ..schemas.model.response import PredictResponse
-
-# Other Imports
-from typing import Annotated
-import pandas as pd
-
-# Create a router
-router = APIRouter()
-
-@router.post("/predict")
-async def predict(person: Annotated[
-        Person,
-        Body(
-            examples=[
-                {
-                    "age": 42,
-                    "job": "entrepreneur",
-                    "marital": "married",
-                    "education": "primary",
-                    "balance": 558,
-                    "housing": "yes",
-                    "duration": 186,
-                    "campaign": 2,
-                }
-            ],
-        ),
-    ], 
-    user=Depends(validate_token)) -> PredictResponse:
-
-    """
-    Route to make predictions.
-
-    Needs to receive information about the client.
-    """
-
-    ohe = ml_models["ohe"]
-    model = ml_models["models"]
-
-    df_person = pd.DataFrame([person.dict()])
-
-    person_t = ohe.transform(df_person)
-    pred = model.predict(person_t)[0]
-
-    return PredictResponse(prediction=str(pred), username= user["username"])

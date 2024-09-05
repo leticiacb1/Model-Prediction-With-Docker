@@ -8,12 +8,17 @@ COPY requirements.txt ${LAMBDA_TASK_ROOT}
 
 # Copy function code
 RUN echo ' > Copy lambda function code ...'
-COPY hello.py ${LAMBDA_TASK_ROOT}
+COPY predict.py ${LAMBDA_TASK_ROOT}
 
-# Install the specified packages
+# Install system dependencies
+RUN echo ' > Install requirements.txt ...'
+RUN yum install -y libstdc++ cmake gcc-c++ && \
+    yum clean all && \
+    rm -rf /var/cache/yum
+
 RUN echo ' > Install requirements.txt ...'
 RUN pip install -r requirements.txt
 
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
 RUN echo ' > Defines the default executable of a Docker image as the lambda function ...'
-CMD [ "hello.hello_from_docker" ]
+CMD [ "predict.run" ]

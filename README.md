@@ -60,7 +60,12 @@ $ python3 create_repository.py
 # Save the repository uri
 ```
 
-Now create your image with your source_code, in my case the function in `hello.py`, and upload in the _Container Register_. To do this, follow the step-by-step instructions in the topic **How to create and upload a Docker image**.
+> :warning: **Attention**
+> 
+> Now create your image with your source_code, in my case the function in `predict.py`, and upload in the _Container Register_. 
+> 
+> To do this, follow the _step-by-step_ instructions in the topic **How to create and upload a Docker image**.
+> 
 
 Now, let's create a lambda function from the image already stores in the ECR.
 
@@ -79,9 +84,14 @@ For test the lambda function run:
 
 
 ```bash
+
+# Update the api_endpoint variable with the value printed 
+# after run :  python3 create_gateway.py
+
 $ python3 predict_test.py
 ```
 
+<br>
 
 #### 🤔 How to create and upload a Docker image
 

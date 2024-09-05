@@ -1,13 +1,11 @@
 from dataclass.lambda_function import LambdaFunction
-
 import time
-import requests
 
 # Variaveis
 username  = 'leticiacb1'
 
 repository_name = 'aps3-mlops-' + username
-function_name = 'aps_prediction_' + username
+function_name = 'aps3_prediction_' + username
 
 try: 
     # Instances
