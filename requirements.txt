@@ -1,0 +1,7 @@
+python-dotenv==1.0.1
+boto3==1.35.7
+requests==2.32.3
+textblob==0.18.0.post0
+pandas==2.2.2
+lightgbm>=4.5.0
+scikit-learn>=1.5.1
