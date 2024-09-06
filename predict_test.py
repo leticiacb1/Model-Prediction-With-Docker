@@ -14,10 +14,9 @@ input_json = {
 }
 
 # Update with api_endpoint got it from create_gateway.py
-api_endpoint = '' 
+api_endpoint = 'https://0dfp3905bl.execute-api.us-east-2.amazonaws.com'
 
 try: 
-    
     # Test the API response
     print(f"\n    [INFO] Test API.\n")
     api_response = requests.post(api_endpoint, json=input_json)

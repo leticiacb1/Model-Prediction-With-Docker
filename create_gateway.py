@@ -4,8 +4,8 @@ import time
 # Variaveis
 username  = 'leticiacb1'
 
-function_name = 'aps3_prediction_' + username
-api_gateway_name = "api_aps3_prediction_" + username
+function_name = 'aps3-prediction-' + username
+api_gateway_name = "api-aps3-prediction-" + username
 
 try: 
     # Instances
@@ -22,5 +22,6 @@ try:
 except Exception as e:
     print(f"\n    [ERROR] An error occurred: \n {e}")
 finally:
+    ...
     # Cleaning - Uncomment the line if you want to delete the gateway
-    gateway.cleanup(function_name=function_name)
+    # gateway.cleanup(function_name=function_name)

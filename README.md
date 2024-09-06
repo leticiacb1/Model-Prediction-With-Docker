@@ -72,6 +72,30 @@ Now, let's create a lambda function from the image already stores in the ECR.
 ```bash
 $ python3 create_lambda_function.py
 ```
+
+> **_NOTE:_**
+> Is possible that the lambda function still in **pending state** when your try to invoke.
+> ```bash
+> # Possible error when run python3 create_lambda_function.py
+> An error occurred (ResourceConflictException) when calling the Invoke operation: 
+> The operation cannot be performed at this time. The function is currently in the following state: Pending
+> ```
+> If this happen you can verify the state of the function and then try to call only the invoke part again.
+> ```bash
+> # Set the aws output method 
+> $ aws configure set output json
+> # Run to see the function state: 
+> $ aws lambda get-function --function-name <function-name>
+> ```
+> When `state = Active`, run only this part of the code to see if the function is invoked successfully:
+> ```python
+> # file : create_lambda_function.py
+> _lambda = LambdaFunction()
+> _lambda.create_client()
+> _lambda.check_function(function_name=function_name, input = function_input)
+> _lambda.see_all_lambda_functions()
+> ``` 
+
 <br>
 
 Create a API gateway:
@@ -85,9 +109,7 @@ For test the lambda function run:
 
 ```bash
 
-# Update the api_endpoint variable with the value printed 
-# after run :  python3 create_gateway.py
-
+# Update the api_endpoint variable with the value of the api url
 $ python3 predict_test.py
 ```
 
