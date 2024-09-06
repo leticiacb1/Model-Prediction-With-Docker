@@ -194,7 +194,7 @@ $ aws ecr get-login-password --region us-east-2 | docker login --username AWS --
 
 # $ docker tag lambda-ex-image:test REPOSITORY_URI:latest
 
-$ docker tag aps3-leticiacb:test 820926566402.dkr.ecr.us-east-2.amazonaws.com/aps3-mlops-leticiacb1:latest
+$ docker tag aps3-leticiacb1:test 820926566402.dkr.ecr.us-east-2.amazonaws.com/aps3-mlops-leticiacb1:latest
 
 ```
 
@@ -203,8 +203,8 @@ After run `docker images` again is expected to get:
 
 |REPOSITORY  |    TAG     |   IMAGE ID    |   CREATED   |      SIZE    |
 |------------|------------|---------------|-------------|--------------|
-|820926566402.dkr.ecr.us-east-2.amazonaws.com/test1-mlops-leticiacb1 |      latest |          bd74aba00bdb |  About a minute ago  | 776MB |
-|lambda-ex-image |      test |          bd74aba00bdb |  About a minute ago  | 776MB |
+|aps3-leticiacb1 |      test |          00fcb2b3f7d5 |  About a minute ago  | 1.27GB |
+| 820926566402.dkr.ecr.us-east-2.amazonaws.com/aps3-mlops-leticiacb1 |    latest |00fcb2b3f7d5 |  About a minute ago |  1.27GB |
 
 Finally, push the image to ECR:
 
