@@ -11,7 +11,7 @@ RUN echo ' > Copy lambda function code ...'
 COPY predict.py ${LAMBDA_TASK_ROOT}
 
 # Install system dependencies
-RUN echo ' > Install requirements.txt ...'
+RUN echo ' > Install system dependencies ...'
 RUN yum install -y libstdc++ cmake gcc-c++ && \
     yum clean all && \
     rm -rf /var/cache/yum

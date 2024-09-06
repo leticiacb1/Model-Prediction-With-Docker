@@ -101,9 +101,8 @@ Examples of Docker images [here](https://gallery.ecr.aws/lambda/python).
 * Create a file named `Dockerfile`.
 
 ```dockerfile
-# Inside config/Dockerfile
-RUN echo ' > Init dockerfile. '
 FROM public.ecr.aws/lambda/python:3.10
+RUN echo ' > Init dockerfile. '
 RUN echo '   Using a aws/lambda/python3.10 image as base.'
 
 # Copy requirements.txt
@@ -112,15 +111,20 @@ COPY requirements.txt ${LAMBDA_TASK_ROOT}
 
 # Copy function code
 RUN echo ' > Copy lambda function code ...'
-COPY hello.py ${LAMBDA_TASK_ROOT}
+COPY predict.py ${LAMBDA_TASK_ROOT}
 
-# Install the specified packages
+# Install system dependencies
+RUN echo ' > Install system dependencies ...'
+RUN yum install -y libstdc++ cmake gcc-c++ && \
+    yum clean all && \
+    rm -rf /var/cache/yum
+
 RUN echo ' > Install requirements.txt ...'
 RUN pip install -r requirements.txt
 
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
 RUN echo ' > Defines the default executable of a Docker image as the lambda function ...'
-CMD [ "hello.hello_from_docker" ]
+CMD [ "predict.run" ]
 ```
 <br>
 
@@ -130,7 +134,7 @@ CMD [ "hello.hello_from_docker" ]
     # In root of this project:
     # Dockerfile inside de onfig folder
     # lambda-ex-image is the name of the image
-    docker build . --platform linux/amd64 -t lambda-ex-image:test -f config/Dockerfile 
+    docker build . --platform linux/amd64 -t aps3-leticiacb1:test -f config/Dockerfile 
 ```
 <br>
 
@@ -147,7 +151,7 @@ Example of expected output :
 
 |REPOSITORY  |    TAG     |   IMAGE ID    |   CREATED   |      SIZE    |
 |------------|------------|---------------|-------------|--------------|
-|lambda-ex-image |      test |          bd74aba00bdb |  About a minute ago  | 776MB |
+|aps3-leticiacb1 |      test |          00fcb2b3f7d5 |  About a minute ago  | 1.27GB |
 
 <br>
 
@@ -156,13 +160,15 @@ Example of expected output :
 Open a terminal and run:
 
 ```bash
-docker run -p 9500:8080 lambda-ex-image:test
+docker run -p 9500:8080 aps3-leticiacb1:test
 ```
 
 In other terminal make a request, is expected to return the handler of lambda function:
 
 ```bash
-curl "http://localhost:9500/2015-03-31/functions/function/invocations" -d '{}'
+curl -X POST "http://localhost:9500/2015-03-31/functions/function/invocations" \
+-H "Content-Type: application/json" \
+-d '{"body": "{\"person\":{\"argumento\":\"algo-aqui\"}}"}'
 ```
 
 Now, let's upload this local image in the ECR AWS container.
@@ -188,7 +194,7 @@ $ aws ecr get-login-password --region us-east-2 | docker login --username AWS --
 
 # $ docker tag lambda-ex-image:test REPOSITORY_URI:latest
 
-$ docker tag lambda-ex-image:test 820926566402.dkr.ecr.us-east-2.amazonaws.com/test1-mlops-leticiacb1:latest
+$ docker tag aps3-leticiacb:test 820926566402.dkr.ecr.us-east-2.amazonaws.com/aps3-mlops-leticiacb1:latest
 
 ```
 
@@ -204,7 +210,7 @@ Finally, push the image to ECR:
 
 ```bash
 # $ docker push REPOSITORY_URI:latest
-$ docker push 820926566402.dkr.ecr.us-east-2.amazonaws.com/test1-mlops-leticiacb1:latest
+$ docker push 820926566402.dkr.ecr.us-east-2.amazonaws.com/aps3-mlops-leticiacb1:latest
 ```
 
 Wait until the push finishes.
